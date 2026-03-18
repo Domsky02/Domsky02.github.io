@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dominik Turostowski | Software Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ffffff', 
+                        accent: '#00b1eb',  /* Głęboki błękit - styl Golf R / Tech */
+                        dark: '#0a0a0a',    
+                        darker: '#000000',  
+                        card: '#111111'     
+                    },
+                    letterSpacing: {
+                        widest: '.25em',
+                        mega: '.5em',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@100;400&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #000; color: #e2e8f0; overflow-x: hidden; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Elegancki gradient tekstu z błękitnym akcentem */
+        .gradient-text {
+            background: linear-gradient(to right, #ffffff, #00b1eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- MINIMALIST PRELOADER --- */
+        .sharp-spinner {
+            width: 48px;
+            height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 2px solid #00b1eb;
+            border-right: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .loading-line {
+            width: 0%; height: 100%; background: #00b1eb;
+            box-shadow: 0 0 10px rgba(0,177,235,0.5);
+            animation: line-progress 2.5s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes line-progress { 0% { width: 0%; opacity: 0; } 10% { opacity: 1; } 40% { width: 45%; } 70% { width: 85%; } 100% { width: 100%; opacity: 1; } }
+
+        /* --- ANIMACJE I EFEKTY INTERAKTYWNE --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.9s cubic-bezier(0.2, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        /* Efekty dla kart i przycisków */
+        .interactive-card {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .interactive-card:hover {
+            border-color: rgba(0, 177, 235, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px -10px rgba(0, 177, 235, 0.15);
+        }
+
+        .interactive-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .interactive-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 177, 235, 0.3);
+            border-color: #00b1eb;
+        }
+        .interactive-btn:active { transform: scale(0.98); }
+
+        /* FIX: Kompensacja optyczna dla tracking-widest w wyśrodkowanych przyciskach */
+        .tracking-fix {
+            padding-left: 0.25em; /* 0.25em to wartość tracking-widest w Tailwind */
+        }
+
+        /* Tło - subtelna mgła skalowalna na mobile */
+        .bg-glow {
+            position: absolute; width: 150vw; height: 150vw; max-width: 600px; max-height: 600px;
+            background: radial-gradient(circle, rgba(0,177,235,0.05) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%; pointer-events: none; z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-darker text-gray-300 antialiased selection:bg-accent selection:text-white">
+
+    <!-- PRELOADER -->
+    <div id="startup-loader" class="fixed inset-0 z-[9999] bg-darker flex flex-col items-center justify-center transition-all duration-1000 ease-in-out">
+        <div class="flex flex-col items-center">
+            <div class="sharp-spinner mb-8"></div>
+            <p class="text-gray-500 font-mono text-[10px] tracking-mega uppercase text-center px-4" data-i18n="nav_init">System Initialization</p>
+            <div class="mt-3 text-[10px] text-accent font-mono tracking-widest uppercase animate-pulse">V. 2.0.26 // Online</div>
+        </div>
+        <div class="absolute bottom-0 left-0 w-full h-[2px] bg-white/5">
+            <div class="absolute top-0 left-0 h-full loading-line"></div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 bg-darker/80 backdrop-blur-md border-b border-white/5 reveal hero-element">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 md:py-5 flex justify-between items-center">
+            <a href="#" class="text-lg font-medium font-mono tracking-widest text-white hover:text-accent transition-colors">DT.ENG</a>
+            
+            <div class="flex items-center gap-4 md:gap-8">
+                <div class="space-x-8 text-xs font-mono tracking-widest uppercase hidden md:block text-gray-400">
+                    <a href="#about" class="hover:text-accent transition-colors" data-i18n="nav_about">O mnie</a>
+                    <a href="#projects" class="hover:text-accent transition-colors" data-i18n="nav_projects">Projekty</a>
+                    <a href="#experience" class="hover:text-accent transition-colors" data-i18n="nav_exp">Doświadczenie</a>
+                    <a href="#contact" class="hover:text-accent transition-colors" data-i18n="nav_contact">Kontakt</a>
+                </div>
+                
+                <!-- LANG SWITCHER -->
+                <div class="flex gap-1 md:gap-2 text-[10px] md:text-xs font-mono font-bold tracking-widest border border-white/10 rounded-full px-2 md:px-3 py-1 bg-black">
+                    <button onclick="setLang('pl')" id="btn-pl" class="lang-btn text-accent hover:text-white transition-colors">PL</button>
+                    <span class="text-gray-700">|</span>
+                    <button onclick="setLang('en')" id="btn-en" class="lang-btn text-gray-500 hover:text-white transition-colors">EN</button>
+                    <span class="text-gray-700">|</span>
+                    <button onclick="setLang('de')" id="btn-de" class="lang-btn text-gray-500 hover:text-white transition-colors">DE</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="pt-32 md:pt-40 pb-16 md:pb-20 px-4 min-h-screen flex items-center relative overflow-hidden" id="about">
+        <div class="bg-glow top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="bg-glow bottom-0 right-0 translate-x-1/4 translate-y-1/4"></div>
+
+        <!-- Ułożenie pionowe na mobile, poziome na PC -->
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16 w-full relative z-10 text-center md:text-left">
+            <div class="flex-1 space-y-6 md:space-y-8 flex flex-col items-center md:items-start">
+                <p class="text-accent font-mono text-[10px] md:text-xs tracking-widest uppercase reveal hero-element" data-i18n="hero_role">Inżynier Oprogramowania</p>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-semibold text-white tracking-tight reveal hero-element delay-100 leading-tight">
+                    Dominik <br class="hidden md:block"> Turostowski.
+                </h1>
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-light text-gray-400 reveal hero-element delay-200" data-i18n="hero_tagline">
+                    Projektuję <span class="gradient-text font-medium">niezawodne systemy</span>.
+                </h2>
+                <p class="text-gray-400 max-w-lg leading-relaxed text-sm md:text-base font-light reveal hero-element delay-200 px-4 md:px-0" data-i18n="hero_desc">
+                    Specjalizuję się w ekosystemie .NET, architekturze baz danych oraz platformach Low-Code. Dostarczam minimalistyczne, wydajne i skalowalne rozwiązania dla sektora B2B.
+                </p>
+                
+                <!-- Przyciski 100% szerokości na mobile -->
+                <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-4 pt-4 md:pt-6 reveal hero-element delay-200">
+                    <a href="#projects" class="interactive-btn tracking-fix w-full sm:w-auto flex justify-center items-center bg-white text-black hover:bg-accent hover:text-white border border-transparent px-8 py-4 rounded-sm font-medium text-xs md:text-sm transition-colors uppercase tracking-widest" data-i18n="btn_projects">
+                        Projekty
+                    </a>
+                    <a href="https://github.com/Domsky02" target="_blank" class="interactive-btn tracking-fix w-full sm:w-auto flex justify-center items-center bg-transparent text-white hover:text-accent px-8 py-4 rounded-sm font-medium text-xs md:text-sm transition-colors border border-white/20 uppercase tracking-widest">
+                        <i class="fab fa-github text-lg mr-3"></i> GitHub
+                    </a>
+                </div>
+            </div>
+            
+            <div class="w-48 h-48 sm:w-56 sm:h-56 md:w-80 md:h-80 relative reveal hero-element delay-100 mt-8 md:mt-0">
+                <div class="absolute inset-0 border-2 border-accent/20 rounded-full animate-pulse blur-sm"></div>
+                <div class="w-full h-full overflow-hidden rounded-full border border-white/10 shadow-[0_0_30px_rgba(0,177,235,0.1)] hover:shadow-[0_0_50px_rgba(0,177,235,0.3)] transition-all duration-500">
+                    <img src="https://ui-avatars.com/api/?name=Dominik+Turostowski&background=0a0a0a&color=00b1eb&size=256&font-size=0.33" alt="Avatar" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SKILLS -->
+    <section class="py-16 md:py-20 bg-dark border-y border-white/5 relative">
+        <div class="max-w-6xl mx-auto px-4 reveal relative z-10">
+            <p class="text-center text-[10px] md:text-xs font-mono text-accent mb-8 md:mb-10 uppercase tracking-widest" data-i18n="skills_title">Technologie & Architektura</p>
+            <div class="flex flex-wrap justify-center gap-3 md:gap-6">
+                <!-- Zmniejszone paddingi dla mobile -->
+                <div class="flex items-center gap-2 md:gap-3 bg-card px-4 md:px-6 py-2 md:py-3 border border-white/5 hover:border-accent hover:text-white transition-all duration-300 cursor-default text-xs md:text-sm font-light rounded-sm hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(0,177,235,0.15)]"><i class="fab fa-microsoft text-accent"></i> C# / .NET 9</div>
+                <div class="flex items-center gap-2 md:gap-3 bg-card px-4 md:px-6 py-2 md:py-3 border border-white/5 hover:border-accent hover:text-white transition-all duration-300 cursor-default text-xs md:text-sm font-light rounded-sm hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(0,177,235,0.15)]"><i class="fas fa-database text-accent"></i> SQL / EF Core</div>
+                <div class="flex items-center gap-2 md:gap-3 bg-card px-4 md:px-6 py-2 md:py-3 border border-white/5 hover:border-accent hover:text-white transition-all duration-300 cursor-default text-xs md:text-sm font-light rounded-sm hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(0,177,235,0.15)]"><i class="fas fa-globe text-accent"></i> Blazor WebAssembly</div>
+                <div class="flex items-center gap-2 md:gap-3 bg-card px-4 md:px-6 py-2 md:py-3 border border-white/5 hover:border-accent hover:text-white transition-all duration-300 cursor-default text-xs md:text-sm font-light rounded-sm hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(0,177,235,0.15)]"><i class="fas fa-bolt text-accent"></i> Mendix (Rapid Dev)</div>
+                <div class="flex items-center gap-2 md:gap-3 bg-card px-4 md:px-6 py-2 md:py-3 border border-white/5 hover:border-accent hover:text-white transition-all duration-300 cursor-default text-xs md:text-sm font-light rounded-sm hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(0,177,235,0.15)]"><i class="fas fa-cloud text-accent"></i> Azure Serverless</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="py-20 md:py-32 px-4 bg-darker relative">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center gap-4 md:gap-6 mb-12 md:mb-20 reveal">
+                <h2 class="text-xl md:text-2xl font-light text-white tracking-widest uppercase" data-i18n="projects_title">Wybrane Prace</h2>
+                <div class="h-[1px] bg-white/10 flex-1"></div>
+            </div>
+
+            <!-- Kontener projektów -->
+            <div id="projects-container" class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+                <!-- Generowane przez JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="py-20 md:py-32 bg-dark px-4 border-t border-white/5">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-center gap-4 md:gap-6 mb-12 md:mb-20 reveal">
+                <h2 class="text-xl md:text-2xl font-light text-white tracking-widest uppercase" data-i18n="exp_title">Doświadczenie</h2>
+                <div class="h-[1px] bg-white/10 flex-1"></div>
+            </div>
+
+            <div class="relative border-l border-white/10 ml-4 md:ml-0 space-y-16 md:space-y-20">
+                <!-- Gryftec -->
+                <div class="relative pl-8 md:pl-16 reveal group cursor-default">
+                    <div class="absolute w-3 h-3 bg-white group-hover:bg-accent transition-colors rounded-full -left-[6.5px] top-2 shadow-[0_0_10px_rgba(255,255,255,0.5)] group-hover:shadow-[0_0_15px_rgba(0,177,235,0.8)]"></div>
+                    <p class="text-[10px] md:text-xs font-mono text-gray-500 mb-2 uppercase tracking-widest" data-i18n="exp_gryf_date">Lipiec 2023 - Październik 2023</p>
+                    <h3 class="text-xl md:text-2xl font-medium text-white mb-1 group-hover:text-accent transition-colors" data-i18n="exp_gryf_role">.NET Developer (Staż)</h3>
+                    <h4 class="text-sm md:text-base text-gray-400 font-light mb-6">GRYFTEC Embedded Systems</h4>
+                    <ul class="list-none text-gray-400 space-y-4 text-xs md:text-sm font-light leading-relaxed">
+                        <li class="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1 before:h-1 before:bg-accent before:rounded-full" data-i18n="exp_gryf_b1">Projektowanie architektury aplikacji desktopowych z wykorzystaniem WPF oraz wzorca MVVM.</li>
+                        <li class="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1 before:h-1 before:bg-accent before:rounded-full" data-i18n="exp_gryf_b2">Utrzymanie stabilności oprogramowania poprzez rygorystyczne testy jednostkowe (NUnit).</li>
+                        <li class="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1 before:h-1 before:bg-accent before:rounded-full" data-i18n="exp_gryf_b3">Refaktoryzacja starszych komponentów UI oraz optymalizacja logiki biznesowej.</li>
+                    </ul>
+                </div>
+
+                <!-- ZUT -->
+                <div class="relative pl-8 md:pl-16 reveal group cursor-default">
+                    <div class="absolute w-3 h-3 bg-gray-600 group-hover:bg-accent transition-colors rounded-full -left-[6.5px] top-2"></div>
+                    <p class="text-[10px] md:text-xs font-mono text-gray-500 mb-2 uppercase tracking-widest" data-i18n="exp_zut_date">2022 - Obecnie</p>
+                    <h3 class="text-xl md:text-2xl font-medium text-white mb-1 group-hover:text-accent transition-colors" data-i18n="exp_zut_role">Inżynieria Oprogramowania</h3>
+                    <h4 class="text-sm md:text-base text-gray-400 font-light" data-i18n="exp_zut_school">Zachodniopomorski Uniwersytet Technologiczny</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="py-24 md:py-40 px-4 text-center bg-darker border-t border-white/5 relative overflow-hidden">
+        <div class="bg-glow bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"></div>
+        <div class="max-w-2xl mx-auto reveal relative z-10">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-6 md:mb-8 tracking-tight" data-i18n="contact_title">Gotowy na nowe wyzwania.</h2>
+            <p class="text-gray-400 mb-10 md:mb-12 text-sm md:text-base font-light leading-relaxed px-4 md:px-0" data-i18n="contact_desc">
+                Szukam przestrzeni, w której jakość kodu spotyka się z realną wartością biznesową. Niezależnie od tego, czy pracujesz w korporacji, czy budujesz startup – porozmawiajmy.
+            </p>
+            <a href="mailto:d.turostowski@gmail.com" class="interactive-btn tracking-fix w-full sm:w-auto flex justify-center items-center mx-auto bg-white text-black hover:bg-accent hover:text-white border border-transparent px-10 py-4 md:py-5 font-medium text-xs md:text-sm rounded-sm uppercase tracking-widest transition-colors" data-i18n="btn_contact">
+                Napisz do mnie
+            </a>
+        </div>
+    </section>
+
+    <footer class="py-8 md:py-10 text-center text-gray-600 text-[10px] md:text-xs font-mono uppercase tracking-widest border-t border-white/5 bg-dark">
+        <p data-i18n="footer">Inż. Dominik Turostowski &copy; 2026 | Szczecin</p>
+    </footer>
+
+    <!-- JS -->
+    <script>
+        const projectsConfig = [
+            {
+                id: 'voltdoc',
+                title: 'VoltDoc',
+                typeKey: 'proj_volt_type',   
+                descKey: 'proj_volt_desc',   
+                githubLink: '',             
+                externalLink: 'voltdoc.pl',           
+                tags: ['.NET 9', 'Blazor', 'PostgreSQL', 'Stripe API']
+            },
+            {
+                id: 'fakturaflow',
+                title: 'Faktura Flow',
+                typeKey: 'proj_fak_type',
+                descKey: 'proj_fak_desc',
+                githubLink: '',
+                externalLink: '',            
+                tags: ['Vue 3', 'SQLite', 'XML/XSD', 'Electron']
+            }
+        ];
+
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            container.innerHTML = ''; 
+
+            projectsConfig.forEach((proj, index) => {
+                const delayClass = index % 2 !== 0 ? 'delay-100' : '';
+                
+                let linksHtml = '';
+                if (proj.githubLink) {
+                    linksHtml += `<a href="${proj.githubLink}" target="_blank" class="text-gray-500 hover:text-accent transition-colors"><i class="fab fa-github text-xl"></i></a>`;
+                }
+                if (proj.externalLink) {
+                    linksHtml += `<a href="${proj.externalLink}" target="_blank" class="text-gray-500 hover:text-accent transition-colors"><i class="fas fa-external-link-alt text-xl"></i></a>`;
+                }
+
+                const tagsHtml = proj.tags.map(tag => 
+                    `<span class="bg-white/5 px-2 md:px-3 py-1 border border-white/5 group-hover:border-accent/30 transition-colors">${tag}</span>`
+                ).join('');
+
+                // Zmniejszone paddingi p-6 zamiast p-10 na telefonach
+                const projectHtml = `
+                    <div class="bg-card p-6 md:p-10 interactive-card group reveal ${delayClass} rounded-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-accent transform -translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                        <div class="flex justify-between items-start mb-6 md:mb-8">
+                            <span class="text-[10px] md:text-xs font-mono text-accent uppercase tracking-widest border-b border-white/10 pb-1" data-i18n="${proj.typeKey}"></span>
+                            <div class="flex gap-4">
+                                ${linksHtml}
+                            </div>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-semibold text-white mb-3 md:mb-4 group-hover:text-accent transition-colors">${proj.title}</h3>
+                        <p class="text-gray-400 mb-6 md:mb-8 text-xs md:text-sm leading-relaxed font-light" data-i18n="${proj.descKey}"></p>
+                        <div class="flex flex-wrap gap-2 md:gap-3 font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-gray-300">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', projectHtml);
+            });
+        }
+
+        const translations = {
+            pl: {
+                nav_init: "Inicjowanie Systemu",
+                nav_about: "O mnie", nav_projects: "Projekty", nav_exp: "Doświadczenie", nav_contact: "Kontakt",
+                hero_role: "Inżynier Oprogramowania",
+                hero_tagline: 'Projektuję <span class="gradient-text font-medium">niezawodne systemy</span>.',
+                hero_desc: "Specjalizuję się w ekosystemie .NET, architekturze baz danych oraz platformach Low-Code. Dostarczam minimalistyczne, wydajne i skalowalne rozwiązania dla sektora B2B.",
+                btn_projects: "Projekty", btn_contact: "Napisz do mnie",
+                skills_title: "Technologie & Architektura",
+                projects_title: "Wybrane Prace",
+                
+                proj_volt_type: "B2B SaaS",
+                proj_volt_desc: "Kompleksowa aplikacja FinTech do analizy danych biznesowych. Architektura zbudowana w oparciu o C# i .NET 8, udostępniająca bezpieczne endpointy API. Interfejs zrealizowany w Blazor WebAssembly, a dane zarządzane przez SQL. Pełna automatyzacja płatności przez Stripe.",
+                proj_fak_type: "Desktop App",
+                proj_fak_desc: "Desktopowa aplikacja ułatwiająca polskim freelancerom wejście w system KSeF. Zawiera integrację z publicznym API GUS, lokalną bazę SQLite z migracjami oraz precyzyjny system walidacji wygenerowanych plików XML przy użyciu schematów XSD.",
+
+                exp_title: "Doświadczenie",
+                exp_gryf_date: "Lipiec 2023 - Październik 2023", exp_gryf_role: ".NET Developer (Staż)",
+                exp_gryf_b1: "Projektowanie architektury aplikacji desktopowych z wykorzystaniem WPF oraz wzorca MVVM.",
+                exp_gryf_b2: "Utrzymanie stabilności oprogramowania poprzez rygorystyczne testy jednostkowe (NUnit).",
+                exp_gryf_b3: "Refaktoryzacja starszych komponentów UI oraz optymalizacja logiki biznesowej.",
+                exp_zut_date: "2022 - Obecnie", exp_zut_role: "Inżynieria Oprogramowania", exp_zut_school: "Zachodniopomorski Uniwersytet Technologiczny",
+                contact_title: "Gotowy na nowe wyzwania.",
+                contact_desc: "Szukam przestrzeni, w której jakość kodu spotyka się z realną wartością biznesową. Niezależnie od tego, czy pracujesz w korporacji, czy budujesz startup – porozmawiajmy.",
+                footer: "Inż. Dominik Turostowski &copy; 2026 | Szczecin"
+            },
+            en: {
+                nav_init: "System Initialization",
+                nav_about: "About", nav_projects: "Projects", nav_exp: "Experience", nav_contact: "Contact",
+                hero_role: "Software Engineer",
+                hero_tagline: 'I design <span class="gradient-text font-medium">reliable systems</span>.',
+                hero_desc: "I specialize in the .NET ecosystem, database architecture, and Low-Code platforms. I deliver minimalist, highly performant, and scalable solutions for the B2B sector.",
+                btn_projects: "View Projects", btn_contact: "Get in touch",
+                skills_title: "Technologies & Architecture",
+                projects_title: "Selected Works",
+                
+                proj_volt_type: "B2B SaaS",
+                proj_volt_desc: "A comprehensive FinTech application for business data analysis. Backend architecture built with C# and .NET 8 providing secure API endpoints. UI developed in Blazor WebAssembly, with data managed via SQL. Fully automated Stripe payments.",
+                proj_fak_type: "Desktop App",
+                proj_fak_desc: "Desktop application simplifying the entry into the KSeF system for Polish freelancers. It features public GUS API integration, local SQLite database with migrations, and a precise XML validation system using XSD schemas.",
+                
+                exp_title: "Experience",
+                exp_gryf_date: "July 2023 - October 2023", exp_gryf_role: ".NET Developer (Intern)",
+                exp_gryf_b1: "Designed desktop application architecture using WPF and the MVVM pattern.",
+                exp_gryf_b2: "Maintained software stability through rigorous unit testing (NUnit).",
+                exp_gryf_b3: "Refactored legacy UI components and optimized business logic.",
+                exp_zut_date: "2022 - Present", exp_zut_role: "Software Engineering (B.Eng.)", exp_zut_school: "West Pomeranian University of Technology",
+                contact_title: "Ready for new challenges.",
+                contact_desc: "I am looking for an environment where code quality meets real business value. Whether you work in a corporation or are building a startup – let's talk.",
+                footer: "Eng. Dominik Turostowski &copy; 2026 | Szczecin"
+            },
+            de: {
+                nav_init: "Systeminitialisierung",
+                nav_about: "Über mich", nav_projects: "Projekte", nav_exp: "Erfahrung", nav_contact: "Kontakt",
+                hero_role: "Softwareentwickler",
+                hero_tagline: 'Ich entwerfe <span class="gradient-text font-medium">zuverlässige Systeme</span>.',
+                hero_desc: "Ich bin spezialisiert auf das .NET-Ökosystem, Datenbankarchitektur und Low-Code-Plattformen. Ich liefere minimalistische, leistungsstarke und skalierbare Lösungen für den B2B-Sektor.",
+                btn_projects: "Projekte Ansehen", btn_contact: "Schreib mir",
+                skills_title: "Technologien & Architektur",
+                projects_title: "Ausgewählte Arbeiten",
+                
+                proj_volt_type: "B2B SaaS",
+                proj_volt_desc: "Eine umfassende FinTech-Anwendung für die Geschäftsdatenanalyse. Backend-Architektur mit C# und .NET 8 für sichere API-Endpunkte. UI entwickelt in Blazor WebAssembly, Datenverwaltung über SQL. Vollständig automatisierte Stripe-Zahlungen.",
+                proj_fak_type: "Desktop App",
+                proj_fak_desc: "Desktop-Anwendung, die polnischen Freiberuflern den Einstieg in das KSeF-System erleichtert. Integration der öffentlichen GUS-API, lokale SQLite-Datenbank und präzise XML-Validierung mittels XSD-Schemata.",
+                
+                exp_title: "Berufserfahrung",
+                exp_gryf_date: "Juli 2023 - Oktober 2023", exp_gryf_role: ".NET Entwickler (Praktikum)",
+                exp_gryf_b1: "Entwicklung der Architektur für Desktop-Anwendungen mit WPF und dem MVVM-Muster.",
+                exp_gryf_b2: "Aufrechterhaltung der Softwarestabilität durch strenge Unit-Tests (NUnit).",
+                exp_gryf_b3: "Refactoring älterer UI-Komponenten und Optimierung der Geschäftslogik.",
+                exp_zut_date: "2022 - Heute", exp_zut_role: "Softwaretechnik (B.Eng.)", exp_zut_school: "Westpommersche Technische Universität",
+                contact_title: "Bereit für neue Herausforderungen.",
+                contact_desc: "Ich suche ein Umfeld, in dem Code-Qualität auf echten Geschäftswert trifft. Egal, ob Sie in einem Unternehmen arbeiten oder ein Startup aufbauen – lassen Sie uns reden.",
+                footer: "Ing. Dominik Turostowski &copy; 2026 | Szczecin"
+            }
+        };
+
+        function setLang(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if(translations[lang][key].includes('<span')) {
+                        el.innerHTML = translations[lang][key]; 
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if(btn.id === `btn-${lang}`) {
+                    btn.classList.add('text-accent');
+                    btn.classList.remove('text-gray-500');
+                } else {
+                    btn.classList.remove('text-accent');
+                    btn.classList.add('text-gray-500');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProjects();
+            setLang('pl');
+
+            document.body.style.overflow = 'hidden';
+            const loader = document.getElementById('startup-loader');
+            
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    document.querySelectorAll('.hero-element').forEach(el => {
+                        el.classList.add('active');
+                    });
+                }, 1000); 
+            }, 2600); 
+
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        obs.unobserve(entry.target); 
+                    }
+                });
+            }, { root: null, rootMargin: '0px', threshold: 0.15 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
